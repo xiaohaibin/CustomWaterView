@@ -55,6 +55,7 @@ public class WaterFlake extends FrameLayout {
         modelList = new ArrayList<>();
         mPoints = new ArrayList<>();
         mPoints.add(new Point(300, 400));
+        mPoints.add(new Point(200, 500));
         mPoints.add(new Point(400, 500));
         mPoints.add(new Point(500, 400));
         for (int i = 0; i < mPoints.size(); i++) {
@@ -86,6 +87,17 @@ public class WaterFlake extends FrameLayout {
             }
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     @Override
