@@ -96,7 +96,6 @@ public class WaterView extends View {
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
 
-
         int width = getWidth() - paddingLeft - paddingRight;
         int height = getHeight() - paddingTop - paddingBottom;
         canvas.translate(width / 2, height / 2);
@@ -110,13 +109,6 @@ public class WaterView extends View {
         int measureWidth = resolveSize(Utils.dp2px(getContext(),2 * mRadius + 2), widthMeasureSpec);
         int measureHeight = resolveSize(Utils.dp2px(getContext(),2 * mRadius + 2), heightMeasureSpec);
         setMeasuredDimension(measureWidth,measureHeight);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        Log.i("===>w",w+"");
-        Log.i("===>h",h+"");
     }
 
     @Override

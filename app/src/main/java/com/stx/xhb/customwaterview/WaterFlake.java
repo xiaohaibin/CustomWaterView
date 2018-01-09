@@ -38,6 +38,11 @@ public class WaterFlake extends FrameLayout {
     private List<WaterModel> modelList;
     private OnWaterItemListener mOnWaterItemListener;
     private List<Point> mPoints;
+    private Rect mRect;
+    /**
+     * 中间小树View
+     */
+    private View mTreeView;
 
     public WaterFlake(@NonNull Context context) {
         super(context);
@@ -55,8 +60,8 @@ public class WaterFlake extends FrameLayout {
     }
 
     private void init() {
-        modelList = new ArrayList<>();
         mPoints = new ArrayList<>();
+        mRect=new Rect();
         mPoints.add(new Point(50, 200));
         mPoints.add(new Point(150, 300));
         mPoints.add(new Point(300, 200));
@@ -64,7 +69,7 @@ public class WaterFlake extends FrameLayout {
         for (int i = 0; i < mPoints.size(); i++) {
             Point point = mPoints.get(i);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(point.x,point.y,0,0);
+            params.setMargins(point.x, point.y, 0, 0);
             WaterView waterView = new WaterView(getContext());
             waterView.setLayoutParams(params);
             addView(waterView);
@@ -77,8 +82,6 @@ public class WaterFlake extends FrameLayout {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
             int y = (int) event.getY();
-            Log.i("===>x", x + "==");
-            Log.i("===>y", y + "==");
             Rect rect = new Rect();
             for (int i = 0; i < getChildCount(); i++) {
                 getChildAt(i).getHitRect(rect);
@@ -96,19 +99,38 @@ public class WaterFlake extends FrameLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
-    @Override
     public boolean performClick() {
         return super.performClick();
     }
 
-    public void setModelList(List<WaterModel> modelList) {
-        this.modelList = modelList;
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        measureChildren(widthMeasureSpec,heightMeasureSpec);
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+    }
+
+    /**
+     * 设置小球数据，根据数据集合创建小球数量
+     *
+     * @param modelList 数据集合
+     * @param view      中间小树View
+     */
+    public void setModelList(List<WaterModel> modelList, View view) {
+        this.modelList = modelList;
+        init();
+        view.getHitRect(mRect);
+    }
+
+    /**
+     * 设置小球点击事件
+     *
+     * @param onWaterItemListener
+     */
     public void setOnWaterItemListener(OnWaterItemListener onWaterItemListener) {
         mOnWaterItemListener = onWaterItemListener;
     }
@@ -133,7 +155,7 @@ public class WaterFlake extends FrameLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 removeView(view);
-                invalidate();
+                requestLayout();
             }
         });
     }
