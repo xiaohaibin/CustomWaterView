@@ -38,7 +38,7 @@ public class WaterView extends View {
     /**
      * 描边线条宽度
      */
-    private float strokeWidth = 1;
+    private float strokeWidth = 0.5f;
     /**
      * 文字字体大小
      */
@@ -51,6 +51,7 @@ public class WaterView extends View {
      * 球心Y坐标
      */
     private float mCenterY;
+    private float proportion;//根据远近距离的不同计算得到的应该占的半径比例
     /**
      * 水滴球半径
      */
@@ -68,8 +69,6 @@ public class WaterView extends View {
     public WaterView(Context context, float centerX, float centerY) {
         super(context);
         init();
-        mCenterX = centerX;
-        mCenterY = centerY;
     }
 
     public WaterView(Context context, @Nullable AttributeSet attrs) {
@@ -90,14 +89,14 @@ public class WaterView extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        int paddingLeft = getPaddingLeft();
-        int paddingRight = getPaddingRight();
-        int paddingTop = getPaddingTop();
-        int paddingBottom = getPaddingBottom();
-
-        int width = getWidth() - paddingLeft - paddingRight;
-        int height = getHeight() - paddingTop - paddingBottom;
-        canvas.translate(width / 2, height / 2);
+//        int paddingLeft = getPaddingLeft();
+//        int paddingRight = getPaddingRight();
+//        int paddingTop = getPaddingTop();
+//        int paddingBottom = getPaddingBottom();
+//
+//        int width = getWidth() - paddingLeft - paddingRight;
+//        int height = getHeight() - paddingTop - paddingBottom;
+//        canvas.translate(width / 2, height / 2);
 
         drawCircleView(canvas);
 
@@ -116,7 +115,7 @@ public class WaterView extends View {
         if (specMode == MeasureSpec.EXACTLY) {
             result = specSize;
         } else {
-            result = Utils.dp2px(getContext(),2 * mRadius + 2);
+            result = (Utils.dp2px(getContext(), (int) (2 * mRadius+strokeWidth)));
             if (specMode == MeasureSpec.AT_MOST) {
                 result = Math.min(result, specSize);
             }
@@ -150,19 +149,19 @@ public class WaterView extends View {
         //圆球
         paint.setColor(waterColor);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(mCenterX, mCenterY, Utils.dp2px(getContext(), mRadius), paint);
+        canvas.drawCircle(Utils.dp2px(getContext(), mRadius), Utils.dp2px(getContext(), mRadius), Utils.dp2px(getContext(), mRadius), paint);
 
         //描边
         paint.setColor(storkeColor);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
-        canvas.drawCircle(mCenterX, mCenterY, Utils.dp2px(getContext(), mRadius) + strokeWidth, paint);
+        paint.setStrokeWidth(Utils.dp2px(getContext(), (int) strokeWidth));
+        canvas.drawCircle(Utils.dp2px(getContext(), mRadius), Utils.dp2px(getContext(), mRadius), Utils.dp2px(getContext(), (int) (mRadius+strokeWidth)) , paint);
 
         //圆球文字
         paint.setTextSize(textSize);
         paint.setColor(textColor);
         paint.setStyle(Paint.Style.FILL);
-        drawVerticalText(canvas, mCenterX, mCenterY, textContent);
+        drawVerticalText(canvas, Utils.dp2px(getContext(), mRadius), Utils.dp2px(getContext(), mRadius), textContent);
     }
 
     private void drawVerticalText(Canvas canvas, float centerX, float centerY, String text) {
@@ -207,5 +206,13 @@ public class WaterView extends View {
 
     public float getCenterY() {
         return mCenterY;
+    }
+
+    public float getProportion() {
+        return proportion;
+    }
+
+    public void setProportion(float proportion) {
+        this.proportion = proportion;
     }
 }

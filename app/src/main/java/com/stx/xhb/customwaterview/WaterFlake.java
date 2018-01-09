@@ -5,20 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.stx.xhb.customwaterview.model.WaterModel;
 
@@ -35,6 +29,7 @@ import java.util.List;
 
 public class WaterFlake extends FrameLayout {
 
+    private int mWidth, mHeight;
     private List<WaterModel> modelList;
     private OnWaterItemListener mOnWaterItemListener;
     private List<Point> mPoints;
@@ -91,7 +86,32 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
+        mWidth = mHeight = Math.min(mWidth, mHeight);
         measureChildren(widthMeasureSpec,heightMeasureSpec);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout (changed, left, top, right, bottom);
+//        int childCount = getChildCount();
+//        for (int i = 0; i < childCount; i++) {
+//            WaterView child = (WaterView) getChildAt(i);
+//            if (child.getVisibility()==GONE){
+//                return;
+//            }
+//            //设置CircleView小圆点的坐标信息
+//            //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
+//            child.setCenterX((float) Math.cos(Math.toRadians(270/childCount- 5))
+//                    * child.getProportion() * mWidth / 2);
+//             child.setCenterX((float) Math.sin(Math.toRadians(270/childCount - 5))
+//                    * child.getProportion() * mWidth / 2);
+//            //放置Circle小圆点
+//            child.layout((int) (child.getCenterX() + mWidth / 2), (int) child.getCenterY() + mHeight / 2,
+//                    (int) child.getCenterX() + child.getMeasuredWidth() + mWidth / 2,
+//                    (int)  child.getCenterY() + child.getMeasuredHeight() + mHeight / 2);
+//        }
     }
 
     /**
@@ -107,11 +127,8 @@ public class WaterFlake extends FrameLayout {
         mPoints.add(new Point(300, 200));
         mPoints.add(new Point(300, 350));
         for (int i = 0; i < mPoints.size(); i++) {
-            Point point = mPoints.get(i);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(point.x, point.y, 0, 0);
             WaterView waterView = new WaterView(getContext());
-            waterView.setLayoutParams(params);
+            waterView.setProportion(0.6f * 0.52f);
             addView(waterView);
         }
     }
