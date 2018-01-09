@@ -85,7 +85,7 @@ public class WaterFlake extends FrameLayout {
                 if (rect.contains(x, y)) {
                     if (mOnWaterItemListener != null) {
                         getChildAt(i).performClick();
-                        mOnWaterItemListener.onItemClick();
+                        mOnWaterItemListener.onItemClick(i);
                         startAnimator(getChildAt(i));
                         return true;
                     }
@@ -114,7 +114,7 @@ public class WaterFlake extends FrameLayout {
     }
 
     public interface OnWaterItemListener {
-        void onItemClick();
+        void onItemClick(int pos);
     }
 
     private void startAnimator(final View view) {

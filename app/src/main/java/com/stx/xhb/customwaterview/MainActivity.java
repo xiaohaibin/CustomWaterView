@@ -14,15 +14,9 @@ public class MainActivity extends AppCompatActivity {
         WaterFlake waterFlake=findViewById(R.id.custom_view);
         waterFlake.setOnWaterItemListener(new WaterFlake.OnWaterItemListener() {
             @Override
-            public void onItemClick() {
-                Toast.makeText(MainActivity.this, "点击了", Toast.LENGTH_SHORT).show();
+            public void onItemClick(int pos) {
+                Toast.makeText(MainActivity.this, "点击了第"+(pos+1)+"个小球", Toast.LENGTH_SHORT).show();
             }
         });
-//        waterFlake.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "点击了", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 }

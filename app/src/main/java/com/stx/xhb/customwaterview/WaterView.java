@@ -60,9 +60,6 @@ public class WaterView extends View {
      * 水滴球半径
      */
     private int mRadius = 30;
-//    private OnViewClickListener mListener;
-    private int startRawX;
-    private int startRawY;
 
     public WaterView(Context context) {
         super(context);
