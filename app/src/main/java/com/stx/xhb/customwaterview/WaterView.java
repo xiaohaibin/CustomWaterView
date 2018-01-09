@@ -1,8 +1,5 @@
 package com.stx.xhb.customwaterview;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -12,8 +9,6 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -60,6 +55,10 @@ public class WaterView extends View {
      * 水滴球半径
      */
     private int mRadius = 30;
+    /**
+     * 圆球文字内容
+     */
+    private String textContent="3g";
 
     public WaterView(Context context) {
         super(context);
@@ -106,9 +105,23 @@ public class WaterView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measureWidth = resolveSize(Utils.dp2px(getContext(),2 * mRadius + 2), widthMeasureSpec);
-        int measureHeight = resolveSize(Utils.dp2px(getContext(),2 * mRadius + 2), heightMeasureSpec);
-        setMeasuredDimension(measureWidth,measureHeight);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(measureSize(widthMeasureSpec),measureSize(heightMeasureSpec));
+    }
+
+    private int measureSize(int measureSpec) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        if (specMode == MeasureSpec.EXACTLY) {
+            result = specSize;
+        } else {
+            result = Utils.dp2px(getContext(),2 * mRadius + 2);
+            if (specMode == MeasureSpec.AT_MOST) {
+                result = Math.min(result, specSize);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -149,7 +162,7 @@ public class WaterView extends View {
         paint.setTextSize(textSize);
         paint.setColor(textColor);
         paint.setStyle(Paint.Style.FILL);
-        drawVerticalText(canvas, mCenterX, mCenterY, "3g");
+        drawVerticalText(canvas, mCenterX, mCenterY, textContent);
     }
 
     private void drawVerticalText(Canvas canvas, float centerX, float centerY, String text) {
@@ -180,4 +193,19 @@ public class WaterView extends View {
         }
     }
 
+    public void setCenterX(float centerX) {
+        mCenterX = centerX;
+    }
+
+    public void setCenterY(float centerY) {
+        mCenterY = centerY;
+    }
+
+    public float getCenterX() {
+        return mCenterX;
+    }
+
+    public float getCenterY() {
+        return mCenterY;
+    }
 }

@@ -38,7 +38,6 @@ public class WaterFlake extends FrameLayout {
     private List<WaterModel> modelList;
     private OnWaterItemListener mOnWaterItemListener;
     private List<Point> mPoints;
-    private Rect mRect;
     /**
      * 中间小树View
      */
@@ -61,20 +60,6 @@ public class WaterFlake extends FrameLayout {
 
     private void init() {
         mPoints = new ArrayList<>();
-        mRect=new Rect();
-        mPoints.add(new Point(50, 200));
-        mPoints.add(new Point(150, 300));
-        mPoints.add(new Point(300, 200));
-        mPoints.add(new Point(300, 350));
-        for (int i = 0; i < mPoints.size(); i++) {
-            Point point = mPoints.get(i);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(point.x, point.y, 0, 0);
-            WaterView waterView = new WaterView(getContext());
-            waterView.setLayoutParams(params);
-            addView(waterView);
-        }
-
     }
 
     @Override
@@ -109,11 +94,6 @@ public class WaterFlake extends FrameLayout {
         measureChildren(widthMeasureSpec,heightMeasureSpec);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
     /**
      * 设置小球数据，根据数据集合创建小球数量
      *
@@ -122,8 +102,18 @@ public class WaterFlake extends FrameLayout {
      */
     public void setModelList(List<WaterModel> modelList, View view) {
         this.modelList = modelList;
-        init();
-        view.getHitRect(mRect);
+        mPoints.add(new Point(50, 200));
+        mPoints.add(new Point(150, 300));
+        mPoints.add(new Point(300, 200));
+        mPoints.add(new Point(300, 350));
+        for (int i = 0; i < mPoints.size(); i++) {
+            Point point = mPoints.get(i);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(point.x, point.y, 0, 0);
+            WaterView waterView = new WaterView(getContext());
+            waterView.setLayoutParams(params);
+            addView(waterView);
+        }
     }
 
     /**
