@@ -5,14 +5,17 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,13 +57,16 @@ public class WaterFlake extends FrameLayout {
     private void init() {
         modelList = new ArrayList<>();
         mPoints = new ArrayList<>();
-        mPoints.add(new Point(300, 400));
-        mPoints.add(new Point(200, 500));
-        mPoints.add(new Point(400, 500));
-        mPoints.add(new Point(500, 400));
+        mPoints.add(new Point(50, 200));
+        mPoints.add(new Point(150, 300));
+        mPoints.add(new Point(300, 200));
+        mPoints.add(new Point(300, 350));
         for (int i = 0; i < mPoints.size(); i++) {
             Point point = mPoints.get(i);
-            WaterView waterView = new WaterView(getContext(), point.x, point.y);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(point.x,point.y,0,0);
+            WaterView waterView = new WaterView(getContext());
+            waterView.setLayoutParams(params);
             addView(waterView);
         }
 
@@ -76,7 +82,7 @@ public class WaterFlake extends FrameLayout {
             Rect rect = new Rect();
             for (int i = 0; i < getChildCount(); i++) {
                 getChildAt(i).getHitRect(rect);
-                if (rect.contains(x,  y)) {
+                if (rect.contains(x, y)) {
                     if (mOnWaterItemListener != null) {
                         getChildAt(i).performClick();
                         mOnWaterItemListener.onItemClick();
@@ -92,12 +98,6 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     @Override
@@ -136,26 +136,5 @@ public class WaterFlake extends FrameLayout {
                 invalidate();
             }
         });
-    }
-
-    /**
-     * 根据触摸位置坐标判断是否在View的区域内
-     *
-     * @param view
-     * @param x
-     * @param y
-     * @return
-     */
-    private boolean isTouchPointInView(View view, int x, int y) {
-        if (view == null) {
-            return false;
-        }
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        int left = location[0];
-        int top = location[1];
-        int right = left + view.getMeasuredWidth();
-        int bottom = top + view.getMeasuredHeight();
-        return y >= top && y <= bottom && x >= left && x <= right;
     }
 }
