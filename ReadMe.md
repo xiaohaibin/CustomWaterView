@@ -1,4 +1,4 @@
-## 自定义仿支付宝蚂蚁森林水滴控件
+## 自定义仿支付宝蚂蚁森林水滴控件（完善中...）
 
  ![ABC](https://github.com/xiaohaibin/CustomWaterView/blob/master/screenshot/gif.gif) 
 
@@ -13,7 +13,7 @@
 
 ### 4、圆球淡入淡出
 
-## Todo
+## To Do List
 
 ### 除去中间树的控件所占的区域，水滴位置随机生成（随机生成算法）
 
