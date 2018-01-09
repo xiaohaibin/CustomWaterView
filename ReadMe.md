@@ -1,5 +1,10 @@
 ## 自定义仿支付宝蚂蚁森林水滴控件
 
+ ![ABC](https://github.com/xiaohaibin/CustomWaterView/blob/master/screenshot/screenshot.png) 
+
+
+## 实现要点
+
 ### 1、自定义小圆球
 
 ### 2、圆球内文字显示
