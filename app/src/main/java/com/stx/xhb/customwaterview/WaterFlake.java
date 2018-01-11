@@ -179,15 +179,7 @@ public class WaterFlake extends FrameLayout {
         return treeCenterX;
     }
 
-    public void setTreeCenterX(float treeCenterX) {
-        this.treeCenterX = treeCenterX;
-    }
-
     public float getTreeCenterY() {
         return treeCenterY;
-    }
-
-    public void setTreeCenterY(float treeCenterY) {
-        this.treeCenterY = treeCenterY;
     }
 }
