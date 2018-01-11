@@ -32,7 +32,6 @@ import java.util.List;
 
 public class WaterFlake extends FrameLayout {
 
-    private int mWidth, mHeight;
     private OnWaterItemListener mOnWaterItemListener;
     /**
      * 小树坐标X
@@ -96,9 +95,6 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mWidth = getMeasuredWidth();
-        mHeight = getMeasuredHeight();
-        mWidth = mHeight = Math.min(mWidth, mHeight);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
     }
 
