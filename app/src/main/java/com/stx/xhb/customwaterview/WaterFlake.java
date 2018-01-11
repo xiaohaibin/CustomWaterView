@@ -5,21 +5,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.stx.xhb.customwaterview.model.WaterModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,6 +96,9 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
+        if (childCount==0){
+            return;
+        }
         int left, top;
         // 根据tem的个数，计算角度
         float angleDelay = -180 / childCount;
@@ -169,7 +167,7 @@ public class WaterFlake extends FrameLayout {
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                view.setVisibility(GONE);
+                removeView(view);
                 isCollect = false;
             }
         });
