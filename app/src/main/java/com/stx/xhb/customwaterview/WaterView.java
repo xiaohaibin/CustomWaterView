@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 /**
  * @author: xiaohaibin.
@@ -66,11 +67,6 @@ public class WaterView extends View {
         init();
     }
 
-    public WaterView(Context context, float centerX, float centerY) {
-        super(context);
-        init();
-    }
-
     public WaterView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -89,38 +85,13 @@ public class WaterView extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-//        int paddingLeft = getPaddingLeft();
-//        int paddingRight = getPaddingRight();
-//        int paddingTop = getPaddingTop();
-//        int paddingBottom = getPaddingBottom();
-//
-//        int width = getWidth() - paddingLeft - paddingRight;
-//        int height = getHeight() - paddingTop - paddingBottom;
-//        canvas.translate(width / 2, height / 2);
-
         drawCircleView(canvas);
-
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(measureSize(widthMeasureSpec),measureSize(heightMeasureSpec));
-    }
-
-    private int measureSize(int measureSpec) {
-        int result;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-        if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
-        } else {
-            result = (Utils.dp2px(getContext(), (int) (2 * mRadius+strokeWidth)));
-            if (specMode == MeasureSpec.AT_MOST) {
-                result = Math.min(result, specSize);
-            }
-        }
-        return result;
+        setMeasuredDimension(Utils.dp2px(getContext(), (int) (2 * (mRadius+strokeWidth))),Utils.dp2px(getContext(), (int) (2 * (mRadius+strokeWidth))));
     }
 
     @Override
@@ -173,10 +144,12 @@ public class WaterView extends View {
         canvas.drawText(text, startX, endY, paint);
     }
 
+
     public void start() {
         if (mAnimator == null) {
             mAnimator = ObjectAnimator.ofFloat(this, "translationY", -6.0f, 6.0f, -6.0f);
             mAnimator.setDuration(3500);
+            mAnimator.setInterpolator(new LinearInterpolator());
             mAnimator.setRepeatMode(ValueAnimator.RESTART);
             mAnimator.setRepeatCount(ValueAnimator.INFINITE);
             mAnimator.start();

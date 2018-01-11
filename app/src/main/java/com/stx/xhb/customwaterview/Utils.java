@@ -28,7 +28,7 @@ public class Utils {
      * @param upper
      * @return
      */
-    public float getRandom(float lower, float upper) {
+    public static float getRandom(float lower, float upper) {
         float min = Math.min(lower, upper);
         float max = Math.max(lower, upper);
         return getRandom(max - min) + min;
@@ -40,7 +40,7 @@ public class Utils {
      * @param upper
      * @return
      */
-    public float getRandom(float upper) {
+    public static float getRandom(float upper) {
         return random.nextFloat() * upper;
     }
 
@@ -50,7 +50,7 @@ public class Utils {
      * @param upper
      * @return
      */
-    public int getRandom(int upper) {
+    public static int getRandom(int upper) {
         return random.nextInt(upper);
     }
 }
