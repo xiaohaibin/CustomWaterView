@@ -45,14 +45,9 @@ public class WaterView extends View {
      */
     private float textSize = 36;
     /**
-     * 球心X坐标
+     * 根据远近距离的不同计算得到的应该占的半径比例
      */
-    private float mCenterX;
-    /**
-     * 球心Y坐标
-     */
-    private float mCenterY;
-    private float proportion;//根据远近距离的不同计算得到的应该占的半径比例
+    private float proportion;
     /**
      * 水滴球半径
      */
@@ -163,22 +158,6 @@ public class WaterView extends View {
             mAnimator.cancel();
             mAnimator = null;
         }
-    }
-
-    public void setCenterX(float centerX) {
-        mCenterX = centerX;
-    }
-
-    public void setCenterY(float centerY) {
-        mCenterY = centerY;
-    }
-
-    public float getCenterX() {
-        return mCenterX;
-    }
-
-    public float getCenterY() {
-        return mCenterY;
     }
 
     public float getProportion() {

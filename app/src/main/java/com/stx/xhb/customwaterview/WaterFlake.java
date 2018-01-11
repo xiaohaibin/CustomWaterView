@@ -38,23 +38,23 @@ public class WaterFlake extends FrameLayout {
     /**
      * 小树坐标X
      */
-    private float treeCenterX=0;
+    private float treeCenterX = 0;
     /**
      * 小树坐标Y
      */
-    private float treeCenterY=0;
+    private float treeCenterY = 0;
     /**
      * 小树高度
      */
-    private int radius=80;
+    private int radius = 80;
     /**
      * 开始角度
      */
-    private double mStartAngle=0;
+    private double mStartAngle = 0;
     /**
      * 是否正在收集能量
      */
-    private boolean isCollect=false;
+    private boolean isCollect = false;
 
     public WaterFlake(@NonNull Context context) {
         super(context);
@@ -100,7 +100,7 @@ public class WaterFlake extends FrameLayout {
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
         mWidth = mHeight = Math.min(mWidth, mHeight);
-        measureChildren(widthMeasureSpec,heightMeasureSpec);
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -112,19 +112,19 @@ public class WaterFlake extends FrameLayout {
         for (int i = 0; i < childCount; i++) {
             WaterView child = (WaterView) getChildAt(i);
             //大于180就取余归于小于180度
-            mStartAngle %=180;
+            mStartAngle %= 180;
 
             //设置CircleView小圆点的坐标信息
             //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
 //            则圆上任一点为：（x1,y1）
 //            x1   =   x0   +   r   *   cos(ao   *   3.14   /180   )
 //            y1   =   y0   +   r   *   sin(ao   *   3.14   /180   )
-            if (child.getVisibility()!=GONE) {
-                left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * 3.14 / 180)*(child.getProportion()/radius*2));
-                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * 3.14 / 180)*(child.getProportion()/radius*2));
-                child.layout(left,top,left+child.getMeasuredWidth(),top+child.getMeasuredWidth());
+            if (child.getVisibility() != GONE) {
+                left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * 3.14 / 180) * (child.getProportion() / radius * 2));
+                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * 3.14 / 180) * (child.getProportion() / radius * 2));
+                child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
             }
-            mStartAngle+=angleDelay;
+            mStartAngle += angleDelay;
         }
     }
 
@@ -133,13 +133,13 @@ public class WaterFlake extends FrameLayout {
      *
      * @param modelList 数据集合
      */
-    public void setModelList(List<WaterModel> modelList,float treeCenterX,float treeCenterY) {
+    public void setModelList(List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
         this.modelList = modelList;
-        this.treeCenterX=treeCenterX;
-        this.treeCenterY=treeCenterY;
+        this.treeCenterX = treeCenterX;
+        this.treeCenterY = treeCenterY;
         for (int i = 0; i < modelList.size(); i++) {
             WaterView waterView = new WaterView(getContext());
-            waterView.setProportion(Utils.getRandom(radius,radius+50));
+            waterView.setProportion(Utils.getRandom(radius, radius + 50));
             addView(waterView);
         }
     }
@@ -158,10 +158,10 @@ public class WaterFlake extends FrameLayout {
     }
 
     private void startAnimator(final View view) {
-        if (isCollect){
+        if (isCollect) {
             return;
         }
-        isCollect=true;
+        isCollect = true;
         ObjectAnimator translatAnimator = ObjectAnimator.ofFloat(view, "translationY", 0f, 300f);
         translatAnimator.start();
 
@@ -176,7 +176,7 @@ public class WaterFlake extends FrameLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 view.setVisibility(GONE);
-                isCollect=false;
+                isCollect = false;
             }
         });
     }
