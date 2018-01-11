@@ -33,7 +33,6 @@ import java.util.List;
 public class WaterFlake extends FrameLayout {
 
     private int mWidth, mHeight;
-    private List<WaterModel> modelList;
     private OnWaterItemListener mOnWaterItemListener;
     /**
      * 小树坐标X
@@ -134,7 +133,6 @@ public class WaterFlake extends FrameLayout {
      * @param modelList 数据集合
      */
     public void setModelList(List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
-        this.modelList = modelList;
         this.treeCenterX = treeCenterX;
         this.treeCenterY = treeCenterY;
         for (int i = 0; i < modelList.size(); i++) {
