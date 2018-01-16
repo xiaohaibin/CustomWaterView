@@ -109,11 +109,11 @@ public class WaterFlake extends FrameLayout {
             //设置CircleView小圆点的坐标信息
             //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
 //            则圆上任一点为：（x1,y1）
-//            x1   =   x0   +   r   *   cos(ao   *   3.14   /180   )
-//            y1   =   y0   +   r   *   sin(ao   *   3.14   /180   )
+//            x1   =   x0   +   r   *   cos(ao   *   π   /180   )
+//            y1   =   y0   +   r   *   sin(ao   *   π   /180   )
             if (child.getVisibility() != GONE) {
-                left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * 3.14 / 180) * (child.getProportion() / radius * 2));
-                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * 3.14 / 180) * (child.getProportion() / radius * 2));
+                left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
+                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle *  Math.PI  / 180) * (child.getProportion() / radius * 2));
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
             }
             mStartAngle += angleDelay;
