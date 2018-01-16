@@ -104,7 +104,6 @@ public class WaterFlake extends FrameLayout {
         float angleDelay = -180 / childCount;
         for (int i = 0; i < childCount; i++) {
             WaterView child = (WaterView) getChildAt(i);
-            //大于180就取余归于小于180度
             mStartAngle %= 180;
 
             //设置CircleView小圆点的坐标信息
@@ -130,8 +129,8 @@ public class WaterFlake extends FrameLayout {
         this.treeCenterX = treeCenterX;
         this.treeCenterY = treeCenterY;
         for (int i = 0; i < modelList.size(); i++) {
-            WaterView waterView = new WaterView(getContext());
-            waterView.setProportion(Utils.getRandom(radius, radius + 50));
+            WaterView waterView = new WaterView(getContext(),(i+1)+"g");
+            waterView.setProportion(Utils.getRandom(radius, radius + 80));
             addView(waterView);
         }
     }
@@ -154,20 +153,21 @@ public class WaterFlake extends FrameLayout {
             return;
         }
         isCollect = true;
-        ObjectAnimator translatAnimator = ObjectAnimator.ofFloat(view, "translationY", 0f, 300f);
-        translatAnimator.start();
+
+        ObjectAnimator translatAnimatorY = ObjectAnimator.ofFloat(view, "translationY", getTreeCenterY());
+        translatAnimatorY.start();
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
         alphaAnimator.start();
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(translatAnimator).with(alphaAnimator);
+        animatorSet.play(translatAnimatorY).with(alphaAnimator);
         animatorSet.setDuration(3000);
         animatorSet.start();
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                removeView(view);
+                removeViewInLayout(view);
                 isCollect = false;
             }
         });

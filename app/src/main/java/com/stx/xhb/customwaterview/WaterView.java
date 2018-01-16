@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -55,10 +56,11 @@ public class WaterView extends View {
     /**
      * 圆球文字内容
      */
-    private String textContent="3g";
+    private String textContent="";
 
-    public WaterView(Context context) {
+    public WaterView(Context context,String textContent) {
         super(context);
+        this.textContent=textContent;
         init();
     }
 
@@ -87,6 +89,13 @@ public class WaterView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(Utils.dp2px(getContext(), (int) (2 * (mRadius+strokeWidth))),Utils.dp2px(getContext(), (int) (2 * (mRadius+strokeWidth))));
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.i("====》X",getX()+"==");
+        Log.i("====》Y",getY()+"==");
     }
 
     @Override
