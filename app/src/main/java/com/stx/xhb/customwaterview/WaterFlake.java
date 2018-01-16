@@ -96,7 +96,7 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
-        if (childCount==0){
+        if (childCount == 0) {
             return;
         }
         int left, top;
@@ -113,7 +113,7 @@ public class WaterFlake extends FrameLayout {
 //            y1   =   y0   +   r   *   sin(ao   *   π   /180   )
             if (child.getVisibility() != GONE) {
                 left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
-                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle *  Math.PI  / 180) * (child.getProportion() / radius * 2));
+                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
             }
             mStartAngle += angleDelay;
@@ -128,8 +128,9 @@ public class WaterFlake extends FrameLayout {
     public void setModelList(List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
         this.treeCenterX = treeCenterX;
         this.treeCenterY = treeCenterY;
+        removeAllViews();
         for (int i = 0; i < modelList.size(); i++) {
-            WaterView waterView = new WaterView(getContext(),(i+1)+"g");
+            WaterView waterView = new WaterView(getContext(), (i + 1) + "g");
             waterView.setProportion(Utils.getRandom(radius, radius + 80));
             addView(waterView);
         }
