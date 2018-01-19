@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             modelList.add(new WaterModel("sds"));
         }
         //此处目前写死坐标，后期可以获取小树的坐标添加进去
-        mWaterFlake.setModelList(modelList,300f,400f);
+        mWaterFlake.setModelList(modelList,300,400);
     }
 
     public void onClick(View view) {

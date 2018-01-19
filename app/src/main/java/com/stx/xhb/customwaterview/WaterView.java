@@ -94,8 +94,8 @@ public class WaterView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.i("====》X",getX()+"==");
-        Log.i("====》Y",getY()+"==");
+        Log.i("====》WaterView X",getX()+"==");
+        Log.i("====》WaterView Y",getY()+"==");
     }
 
     @Override
@@ -176,4 +176,5 @@ public class WaterView extends View {
     public void setProportion(float proportion) {
         this.proportion = proportion;
     }
+
 }

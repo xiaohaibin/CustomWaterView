@@ -9,12 +9,12 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.stx.xhb.customwaterview.model.WaterModel;
-
 import java.util.List;
 
 /**
@@ -49,6 +49,10 @@ public class WaterFlake extends FrameLayout {
      */
     private boolean isCollect = false;
 
+    private float panding=50;
+
+    private float mWidth,mHeight;
+
     public WaterFlake(@NonNull Context context) {
         super(context);
     }
@@ -73,7 +77,7 @@ public class WaterFlake extends FrameLayout {
                     if (mOnWaterItemListener != null) {
                         getChildAt(i).performClick();
                         mOnWaterItemListener.onItemClick(i);
-                        startAnimator(getChildAt(i));
+                        collectAnimator(getChildAt(i));
                         return true;
                     }
                 }
@@ -90,48 +94,69 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int childCount = getChildCount();
-        if (childCount == 0) {
-            return;
-        }
-        int left, top;
-        // 根据tem的个数，计算角度
-        float angleDelay = -180 / childCount;
-        for (int i = 0; i < childCount; i++) {
-            WaterView child = (WaterView) getChildAt(i);
-            mStartAngle %= 180;
-
-            //设置CircleView小圆点的坐标信息
-            //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
-//            则圆上任一点为：（x1,y1）
-//            x1   =   x0   +   r   *   cos(ao   *   π   /180   )
-//            y1   =   y0   +   r   *   sin(ao   *   π   /180   )
-            if (child.getVisibility() != GONE) {
-                left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
-                top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
-                child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
-            }
-            mStartAngle += angleDelay;
-        }
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth=w-panding;
+        mHeight=h-panding;
+        Log.i("===>w",w+"");
+        Log.i("===>h",h+"");
     }
+
+    //    @Override
+//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+//        int childCount = getChildCount();
+//        if (childCount == 0) {
+//            return;
+//        }
+//        int left, top;
+//        // 根据tem的个数，计算角度
+//        float angleDelay = -180 / childCount;
+//        for (int i = 0; i < childCount; i++) {
+//            WaterView child = (WaterView) getChildAt(i);
+//            mStartAngle %= 180;
+//
+//            //设置CircleView小圆点的坐标信息
+//            //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
+////            则圆上任一点为：（x1,y1）
+////            x1   =   x0   +   r   *   cos(ao   *   π   /180   )
+////            y1   =   y0   +   r   *   sin(ao   *   π   /180   )
+//            left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
+//            top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
+//            child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
+//            mStartAngle += angleDelay;
+//        }
+//    }
 
     /**
      * 设置小球数据，根据数据集合创建小球数量
      *
      * @param modelList 数据集合
      */
-    public void setModelList(List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
+    public void setModelList(final List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
+        if (modelList==null||modelList.isEmpty()){
+            return;
+        }
         this.treeCenterX = treeCenterX;
         this.treeCenterY = treeCenterY;
         removeAllViews();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                addWaterView(modelList);
+            }
+        });
+    }
+
+    private void addWaterView(List<WaterModel> modelList) {
         for (int i = 0; i < modelList.size(); i++) {
             WaterView waterView = new WaterView(getContext(), (i + 1) + "g");
-            waterView.setProportion(Utils.getRandom(radius, radius + 80));
+            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin= (int) (mWidth*Utils.getRandom(0.1F,0.8F));
+            layoutParams.topMargin= (int) (mWidth*Utils.getRandom(0.11F,0.85F));
+            waterView.setLayoutParams(layoutParams);
             addView(waterView);
         }
     }
@@ -149,7 +174,7 @@ public class WaterFlake extends FrameLayout {
         void onItemClick(int pos);
     }
 
-    private void startAnimator(final View view) {
+    private void collectAnimator(final View view) {
         if (isCollect) {
             return;
         }
@@ -158,21 +183,25 @@ public class WaterFlake extends FrameLayout {
         ObjectAnimator translatAnimatorY = ObjectAnimator.ofFloat(view, "translationY", getTreeCenterY());
         translatAnimatorY.start();
 
+        ObjectAnimator translatAnimatorX = ObjectAnimator.ofFloat(view, "translationX",getTreeCenterX());
+        translatAnimatorX.start();
+
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
         alphaAnimator.start();
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(translatAnimatorY).with(alphaAnimator);
+        animatorSet.play(translatAnimatorY).with(translatAnimatorX).with(alphaAnimator);
         animatorSet.setDuration(3000);
         animatorSet.start();
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                removeViewInLayout(view);
+                removeView(view);
                 isCollect = false;
             }
         });
     }
+
 
     public float getTreeCenterX() {
         return treeCenterX;
