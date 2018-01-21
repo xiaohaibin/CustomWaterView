@@ -41,19 +41,11 @@ public class WaterFlake extends FrameLayout {
      */
     private float treeCenterY = 0;
     /**
-     * 小树高度
-     */
-    private int radius = 80;
-    /**
-     * 开始角度
-     */
-    private double mStartAngle = 0;
-    /**
      * 是否正在收集能量
      */
     private boolean isCollect = false;
 
-    private float panding = 50;
+    private float mPanding = 50;
 
     private float mWidth, mHeight;
     private LayoutInflater mLayoutInflater;
@@ -103,15 +95,10 @@ public class WaterFlake extends FrameLayout {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w - panding;
-        mHeight = h - panding;
+        mWidth = w - mPanding;
+        mHeight = h - mPanding;
         Log.i("===>w", w + "");
         Log.i("===>h", h + "");
     }
@@ -137,10 +124,12 @@ public class WaterFlake extends FrameLayout {
     }
 
     private void addWaterView(List<WaterModel> modelList) {
+        int[] xRandom = randomCommon(1, 8, modelList.size());
+        int[] yRandom = randomCommon(1, 7, modelList.size());
         for (int i = 0; i < modelList.size(); i++) {
-            View view = mLayoutInflater.inflate(R.layout.item_water, this,false);
-            view.setX(mWidth * Utils.getRandom(0.1F, 0.8F));
-            view.setY(mHeight * Utils.getRandom(0.16F, 0.7F));
+            View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
+            view.setX((float) (mWidth * (xRandom[i]*0.1))+36);
+            view.setY((float) (mHeight * (yRandom[i]*0.12)+36));
             addView(view);
             addShowViewAnimation(view);
             start(view);
@@ -189,7 +178,7 @@ public class WaterFlake extends FrameLayout {
     }
 
     public void start(View view) {
-        ObjectAnimator mAnimator = ObjectAnimator.ofFloat(view, "translationY", -6f+view.getY(),view.getY()+6f, -6.0f+view.getY());
+        ObjectAnimator mAnimator = ObjectAnimator.ofFloat(view, "translationY", -6f + view.getY(), view.getY() + 6f, -6.0f + view.getY());
         mAnimator.setDuration(3500);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setRepeatMode(ValueAnimator.RESTART);
@@ -199,6 +188,7 @@ public class WaterFlake extends FrameLayout {
 
     /**
      * 添加显示动画
+     *
      * @param view
      */
     private void addShowViewAnimation(View view) {
@@ -206,6 +196,37 @@ public class WaterFlake extends FrameLayout {
         view.setScaleX(0);
         view.setScaleY(0);
         view.animate().alpha(1).scaleX(1).scaleY(1).setDuration(500).start();
+    }
+
+    /**
+     * 随机指定范围内N个不重复的数
+     * 最简单最基本的方法
+     *
+     * @param min 指定范围最小值
+     * @param max 指定范围最大值
+     * @param n   随机数个数
+     */
+    public static int[] randomCommon(int min, int max, int n) {
+        if (n > (max - min + 1) || max < min) {
+            return null;
+        }
+        int[] result = new int[n];
+        int count = 0;
+        while (count < n) {
+            int num = (int) ((Math.random() * (max - min)) + min);
+            boolean flag = true;
+            for (int j = 0; j < n; j++) {
+                if (num == result[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                result[count] = num;
+                count++;
+            }
+        }
+        return result;
     }
 
 
