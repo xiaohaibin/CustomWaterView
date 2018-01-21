@@ -4,17 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+
 import com.stx.xhb.customwaterview.model.WaterModel;
+
 import java.util.List;
 
 /**
@@ -49,20 +53,23 @@ public class WaterFlake extends FrameLayout {
      */
     private boolean isCollect = false;
 
-    private float panding=50;
+    private float panding = 50;
 
-    private float mWidth,mHeight;
+    private float mWidth, mHeight;
+    private LayoutInflater mLayoutInflater;
+
 
     public WaterFlake(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public WaterFlake(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public WaterFlake(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @Override
@@ -86,6 +93,10 @@ public class WaterFlake extends FrameLayout {
         return super.onTouchEvent(event);
     }
 
+    private void init() {
+        mLayoutInflater = LayoutInflater.from(getContext());
+    }
+
     @Override
     public boolean performClick() {
         return super.performClick();
@@ -99,36 +110,11 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth=w-panding;
-        mHeight=h-panding;
-        Log.i("===>w",w+"");
-        Log.i("===>h",h+"");
+        mWidth = w - panding;
+        mHeight = h - panding;
+        Log.i("===>w", w + "");
+        Log.i("===>h", h + "");
     }
-
-    //    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//        int childCount = getChildCount();
-//        if (childCount == 0) {
-//            return;
-//        }
-//        int left, top;
-//        // 根据tem的个数，计算角度
-//        float angleDelay = -180 / childCount;
-//        for (int i = 0; i < childCount; i++) {
-//            WaterView child = (WaterView) getChildAt(i);
-//            mStartAngle %= 180;
-//
-//            //设置CircleView小圆点的坐标信息
-//            //坐标 = 旋转角度 * 半径 * 根据远近距离的不同计算得到的应该占的半径比例
-////            则圆上任一点为：（x1,y1）
-////            x1   =   x0   +   r   *   cos(ao   *   π   /180   )
-////            y1   =   y0   +   r   *   sin(ao   *   π   /180   )
-//            left = (int) (getTreeCenterX() + radius * Math.cos(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
-//            top = (int) (getTreeCenterY() + radius * Math.sin(mStartAngle * Math.PI / 180) * (child.getProportion() / radius * 2));
-//            child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredWidth());
-//            mStartAngle += angleDelay;
-//        }
-//    }
 
     /**
      * 设置小球数据，根据数据集合创建小球数量
@@ -136,7 +122,7 @@ public class WaterFlake extends FrameLayout {
      * @param modelList 数据集合
      */
     public void setModelList(final List<WaterModel> modelList, float treeCenterX, float treeCenterY) {
-        if (modelList==null||modelList.isEmpty()){
+        if (modelList == null || modelList.isEmpty()) {
             return;
         }
         this.treeCenterX = treeCenterX;
@@ -152,12 +138,12 @@ public class WaterFlake extends FrameLayout {
 
     private void addWaterView(List<WaterModel> modelList) {
         for (int i = 0; i < modelList.size(); i++) {
-            WaterView waterView = new WaterView(getContext(), (i + 1) + "g");
-            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin= (int) (mWidth*Utils.getRandom(0.1F,0.8F));
-            layoutParams.topMargin= (int) (mWidth*Utils.getRandom(0.11F,0.85F));
-            waterView.setLayoutParams(layoutParams);
-            addView(waterView);
+            View view = mLayoutInflater.inflate(R.layout.item_water, this,false);
+            view.setX(mWidth * Utils.getRandom(0.1F, 0.8F));
+            view.setY(mHeight * Utils.getRandom(0.16F, 0.7F));
+            addView(view);
+            addShowViewAnimation(view);
+            start(view);
         }
     }
 
@@ -183,7 +169,7 @@ public class WaterFlake extends FrameLayout {
         ObjectAnimator translatAnimatorY = ObjectAnimator.ofFloat(view, "translationY", getTreeCenterY());
         translatAnimatorY.start();
 
-        ObjectAnimator translatAnimatorX = ObjectAnimator.ofFloat(view, "translationX",getTreeCenterX());
+        ObjectAnimator translatAnimatorX = ObjectAnimator.ofFloat(view, "translationX", getTreeCenterX());
         translatAnimatorX.start();
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
@@ -200,6 +186,26 @@ public class WaterFlake extends FrameLayout {
                 isCollect = false;
             }
         });
+    }
+
+    public void start(View view) {
+        ObjectAnimator mAnimator = ObjectAnimator.ofFloat(view, "translationY", -6f+view.getY(),view.getY()+6f, -6.0f+view.getY());
+        mAnimator.setDuration(3500);
+        mAnimator.setInterpolator(new LinearInterpolator());
+        mAnimator.setRepeatMode(ValueAnimator.RESTART);
+        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimator.start();
+    }
+
+    /**
+     * 添加显示动画
+     * @param view
+     */
+    private void addShowViewAnimation(View view) {
+        view.setAlpha(0);
+        view.setScaleX(0);
+        view.setScaleY(0);
+        view.animate().alpha(1).scaleX(1).scaleY(1).setDuration(500).start();
     }
 
 
