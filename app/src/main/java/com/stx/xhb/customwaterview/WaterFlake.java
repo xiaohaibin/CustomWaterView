@@ -126,6 +126,9 @@ public class WaterFlake extends FrameLayout {
     private void addWaterView(List<WaterModel> modelList) {
         int[] xRandom = randomCommon(1, 8, modelList.size());
         int[] yRandom = randomCommon(1, 7, modelList.size());
+        if (xRandom==null||yRandom==null){
+            return;
+        }
         for (int i = 0; i < modelList.size(); i++) {
             View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
             view.setX((float) (mWidth * (xRandom[i]*0.1))+36);
