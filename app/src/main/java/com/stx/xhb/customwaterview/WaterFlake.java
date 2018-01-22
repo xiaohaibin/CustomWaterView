@@ -46,10 +46,9 @@ public class WaterFlake extends FrameLayout {
     private boolean isCollect = false;
 
     private float mPanding = 50;
-
+    private View mView;
     private float mWidth, mHeight;
     private LayoutInflater mLayoutInflater;
-
 
     public WaterFlake(@NonNull Context context) {
         this(context, null);
@@ -123,16 +122,36 @@ public class WaterFlake extends FrameLayout {
         });
     }
 
+    /**
+     * 设置小球数据，根据数据集合创建小球数量
+     *
+     * @param modelList 数据集合
+     */
+    public void setModelList(final List<WaterModel> modelList, View view) {
+        if (modelList == null || modelList.isEmpty()) {
+            return;
+        }
+        this.treeCenterX = view.getX();
+        this.treeCenterY = view.getY();
+        removeAllViews();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                addWaterView(modelList);
+            }
+        });
+    }
+
     private void addWaterView(List<WaterModel> modelList) {
         int[] xRandom = randomCommon(1, 8, modelList.size());
         int[] yRandom = randomCommon(1, 7, modelList.size());
-        if (xRandom==null||yRandom==null){
+        if (xRandom == null || yRandom == null) {
             return;
         }
         for (int i = 0; i < modelList.size(); i++) {
             View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
-            view.setX((float) (mWidth * (xRandom[i]*0.1))+36);
-            view.setY((float) (mHeight * (yRandom[i]*0.12)+36));
+            view.setX((float) ((mWidth * xRandom[i]*0.1) + view.getWidth()));
+            view.setY((float) ((mHeight * yRandom[i]*0.12) + view.getHeight()));
             addView(view);
             addShowViewAnimation(view);
             start(view);

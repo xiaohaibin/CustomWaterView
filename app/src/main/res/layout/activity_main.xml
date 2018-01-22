@@ -6,15 +6,24 @@
     android:orientation="vertical"
     tools:context="com.stx.xhb.customwaterview.MainActivity">
 
-    <com.stx.xhb.customwaterview.WaterFlake
-        android:id="@+id/custom_view"
-        android:background="@drawable/bg"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:background="@drawable/bg"
+        android:layout_height="400dp">
+
+        <com.stx.xhb.customwaterview.WaterFlake
+            android:id="@+id/custom_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
 
    <Button
+       android:id="@+id/btn"
        android:onClick="onClick"
        android:text="重置"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content" />
+
 </LinearLayout>
