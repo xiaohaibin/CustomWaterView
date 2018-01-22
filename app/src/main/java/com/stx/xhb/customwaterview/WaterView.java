@@ -46,10 +46,6 @@ public class WaterView extends View {
      */
     private float textSize = 36;
     /**
-     * 根据远近距离的不同计算得到的应该占的半径比例
-     */
-    private float proportion;
-    /**
      * 水滴球半径
      */
     private int mRadius = 30;
@@ -167,14 +163,6 @@ public class WaterView extends View {
             mAnimator.cancel();
             mAnimator = null;
         }
-    }
-
-    public float getProportion() {
-        return proportion;
-    }
-
-    public void setProportion(float proportion) {
-        this.proportion = proportion;
     }
 
 }
