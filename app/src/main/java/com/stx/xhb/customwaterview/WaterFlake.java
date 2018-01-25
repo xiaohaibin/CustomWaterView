@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,8 +44,6 @@ public class WaterFlake extends FrameLayout {
      */
     private boolean isCollect = false;
 
-    private float mPanding = 50;
-    private View mView;
     private float mWidth, mHeight;
     private LayoutInflater mLayoutInflater;
 
@@ -96,10 +93,8 @@ public class WaterFlake extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w - mPanding;
-        mHeight = h - mPanding;
-        Log.i("===>w", w + "");
-        Log.i("===>h", h + "");
+        mWidth = w;
+        mHeight = h;
     }
 
     /**
@@ -150,8 +145,8 @@ public class WaterFlake extends FrameLayout {
         }
         for (int i = 0; i < modelList.size(); i++) {
             View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
-            view.setX((float) ((mWidth * xRandom[i]*0.1) + view.getWidth()));
-            view.setY((float) ((mHeight * yRandom[i]*0.12) + view.getHeight()));
+            view.setX((float) ((mWidth * xRandom[i] * 0.11)));
+            view.setY((float) ((mHeight * yRandom[i] * 0.08)));
             addView(view);
             addShowViewAnimation(view);
             start(view);

@@ -11,6 +11,9 @@ import com.stx.xhb.customwaterview.model.WaterModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mr.xiao
+ */
 public class MainActivity extends AppCompatActivity {
 
     private WaterFlake mWaterFlake;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         mWaterFlake.setOnWaterItemListener(new WaterFlake.OnWaterItemListener() {
             @Override
             public void onItemClick(int pos) {
-                Toast.makeText(MainActivity.this, "点击了第"+(pos+1)+"个小球", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "点击了第" + (pos + 1) + "个小球", Toast.LENGTH_SHORT).show();
             }
         });
         initData();
@@ -34,20 +37,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData() {
         mModelList = new ArrayList<>();
-        for (int i=0;i<6;i++) {
+        for (int i = 0; i < 6; i++) {
             mModelList.add(new WaterModel("sds"));
         }
         mBtn.post(new Runnable() {
             @Override
             public void run() {
                 //此处目前写死坐标，后期可以获取小树的坐标添加进去
-                mWaterFlake.setModelList(mModelList,mBtn);
+                mWaterFlake.setModelList(mModelList, mBtn);
             }
         });
 
     }
 
     public void onClick(View view) {
-         initData();
+        initData();
     }
 }
