@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         mBtn = findViewById(R.id.btn);
         mWaterFlake.setOnWaterItemListener(new WaterFlake.OnWaterItemListener() {
             @Override
-            public void onItemClick(int pos) {
-                Toast.makeText(MainActivity.this, "点击了第" + (pos + 1) + "个小球", Toast.LENGTH_SHORT).show();
+            public void onItemClick(WaterModel pos) {
+                Toast.makeText(MainActivity.this, "点击了", Toast.LENGTH_SHORT).show();
             }
         });
         initData();

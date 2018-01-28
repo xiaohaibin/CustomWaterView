@@ -6,12 +6,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
@@ -58,27 +56,6 @@ public class WaterFlake extends FrameLayout {
     public WaterFlake(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            Rect rect = new Rect();
-            for (int i = 0; i < getChildCount(); i++) {
-                getChildAt(i).getHitRect(rect);
-                if (rect.contains(x, y)) {
-                    if (mOnWaterItemListener != null) {
-                        getChildAt(i).performClick();
-                        mOnWaterItemListener.onItemClick(i);
-                        collectAnimator(getChildAt(i));
-                        return true;
-                    }
-                }
-            }
-        }
-        return super.onTouchEvent(event);
     }
 
     private void init() {
@@ -144,9 +121,23 @@ public class WaterFlake extends FrameLayout {
             return;
         }
         for (int i = 0; i < modelList.size(); i++) {
-            View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
+            WaterModel waterModel = modelList.get(i);
+            final View view = mLayoutInflater.inflate(R.layout.item_water, this, false);
             view.setX((float) ((mWidth * xRandom[i] * 0.11)));
             view.setY((float) ((mHeight * yRandom[i] * 0.08)));
+            view.setTag(waterModel);
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object tag = v.getTag();
+                    if (tag instanceof WaterModel) {
+                        if (mOnWaterItemListener != null) {
+                            mOnWaterItemListener.onItemClick((WaterModel) tag);
+                            collectAnimator(view);
+                        }
+                    }
+                }
+            });
             addView(view);
             addShowViewAnimation(view);
             start(view);
@@ -163,7 +154,7 @@ public class WaterFlake extends FrameLayout {
     }
 
     public interface OnWaterItemListener {
-        void onItemClick(int pos);
+        void onItemClick(WaterModel waterModel);
     }
 
     private void collectAnimator(final View view) {
