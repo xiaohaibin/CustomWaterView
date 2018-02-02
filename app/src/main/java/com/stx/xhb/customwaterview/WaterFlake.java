@@ -5,10 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -16,7 +20,10 @@ import android.widget.FrameLayout;
 
 import com.stx.xhb.customwaterview.model.WaterModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author: xiaohaibin.
@@ -27,7 +34,7 @@ import java.util.List;
  */
 
 public class WaterFlake extends FrameLayout {
-
+    private static final int WHAT_ADD_PROGRESS = 1;
     private OnWaterItemListener mOnWaterItemListener;
     /**
      * 小树坐标X
@@ -41,7 +48,19 @@ public class WaterFlake extends FrameLayout {
      * 是否正在收集能量
      */
     private boolean isCollect = false;
-
+    /**
+     * view变化的y抖动范围
+     */
+    private static final int CHANGE_RANGE = 10;
+    /**
+     * 控制抖动动画执行的快慢
+     */
+    public static final int PROGRESS_DELAY_MILLIS = 12;
+    /**
+     * 控制水滴动画的偏移量
+     */
+    private List<Float> mOffsets = Arrays.asList(5.0f, 4.5f, 4.8f, 5.5f, 5.8f, 6.0f, 6.5f);
+    private Random mRandom = new Random();
     private float mWidth, mHeight;
     private LayoutInflater mLayoutInflater;
 
@@ -112,6 +131,7 @@ public class WaterFlake extends FrameLayout {
                 addWaterView(modelList);
             }
         });
+
     }
 
     private void addWaterView(List<WaterModel> modelList) {
@@ -138,6 +158,8 @@ public class WaterFlake extends FrameLayout {
                     }
                 }
             });
+            view.setTag(R.string.isUp, mRandom.nextBoolean());
+            setOffset(view);
             addView(view);
             addShowViewAnimation(view);
             start(view);
@@ -186,13 +208,21 @@ public class WaterFlake extends FrameLayout {
     }
 
     public void start(View view) {
-        ObjectAnimator mAnimator = ObjectAnimator.ofFloat(view, "translationY", -6f + view.getY(), view.getY() + 6f, -6.0f + view.getY());
-        mAnimator.setDuration(3500);
+        boolean isUp = (boolean) view.getTag(R.string.isUp);
+        float offset = (float) view.getTag(R.string.offset);
+        ObjectAnimator mAnimator = null;
+        if (isUp) {
+            mAnimator = ObjectAnimator.ofFloat(view, "translationY", view.getY() - offset, view.getY() + offset, view.getY() - offset);
+        } else {
+            mAnimator = ObjectAnimator.ofFloat(view, "translationY", view.getY() + offset, view.getY() - offset, view.getY() + offset);
+        }
+        mAnimator.setDuration(1800);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setRepeatMode(ValueAnimator.RESTART);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.start();
     }
+
 
     /**
      * 添加显示动画
@@ -245,4 +275,15 @@ public class WaterFlake extends FrameLayout {
     public float getTreeCenterY() {
         return treeCenterY;
     }
+
+    /**
+     * 设置View的offset
+     *
+     * @param view
+     */
+    private void setOffset(View view) {
+        float offset = mOffsets.get(mRandom.nextInt(mOffsets.size()));
+        view.setTag(R.string.offset, offset);
+    }
+
 }
